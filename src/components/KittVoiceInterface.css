@@ -1,0 +1,257 @@
+.kitt-monitor {
+  background: #000000;
+  font-family: 'Orbitron', 'Courier New', monospace;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ff0000;
+  overflow: hidden;
+  position: relative;
+}
+
+.kitt-monitor::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 0, 0, 0.03) 2px,
+      rgba(255, 0, 0, 0.03) 4px
+    );
+  pointer-events: none;
+  z-index: 10;
+}
+
+.control-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 40px 20px;
+}
+
+.control-panel.left {
+  margin-right: 40px;
+}
+
+.control-panel.right {
+  margin-left: 40px;
+}
+
+.control-button {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  position: relative;
+  animation: control-pulse 2s ease-in-out infinite;
+}
+
+.control-button.red {
+  background: radial-gradient(circle, #ff0000, #cc0000);
+  box-shadow: 
+    0 0 20px rgba(255, 0, 0, 0.5),
+    inset 0 0 10px rgba(255, 0, 0, 0.3);
+}
+
+.control-button.yellow {
+  background: radial-gradient(circle, #ffff00, #cccc00);
+  box-shadow: 
+    0 0 20px rgba(255, 255, 0, 0.5),
+    inset 0 0 10px rgba(255, 255, 0, 0.3);
+}
+
+.main-display {
+  background: #000;
+  border: 3px solid #ff0000;
+  border-radius: 20px;
+  width: 800px;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 
+    0 0 50px rgba(255, 0, 0, 0.3),
+    inset 0 0 50px rgba(255, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.kitt-scanner {
+  position: relative;
+  width: 100%;
+  height: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.scanner-bar {
+  position: absolute;
+  width: 6px;
+  height: 80px;
+  background: linear-gradient(to bottom, #ff0000, #cc0000, #ff0000);
+  border-radius: 3px;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+}
+
+.scanner-bar.idle {
+  transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+}
+
+.scanner-bar.speaking {
+  transition: transform 0.05s ease-out, opacity 0.05s ease-out;
+}
+
+.voice-visualization {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: end;
+  gap: 3px;
+  height: 80px;
+}
+
+.voice-bar {
+  width: 4px;
+  background: linear-gradient(to top, #ff0000, #ff6666);
+  border-radius: 2px;
+  transition: height 0.1s ease;
+  opacity: 0.7;
+}
+
+.voice-bar.listening {
+  opacity: 1;
+  animation: voice-pulse 0.1s ease-in-out infinite alternate;
+  box-shadow: 0 0 8px rgba(255, 0, 0, 0.8);
+}
+
+.status-display {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 30px;
+  text-shadow: 0 0 20px #ff0000;
+  min-height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-control-button {
+  background: linear-gradient(135deg, #1a0000, #330000);
+  border: 2px solid #ff0000;
+  color: #ff0000;
+  font-family: 'Orbitron', monospace;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  padding: 15px 30px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 
+    0 0 20px rgba(255, 0, 0, 0.3),
+    inset 0 0 20px rgba(255, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.main-control-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.main-control-button:hover::before {
+  left: 100%;
+}
+
+.main-control-button:hover {
+  transform: scale(1.05);
+  box-shadow: 
+    0 0 30px rgba(255, 0, 0, 0.5),
+    inset 0 0 30px rgba(255, 0, 0, 0.2);
+}
+
+.main-control-button.active {
+  background: linear-gradient(135deg, #330000, #660000);
+  animation: button-active-pulse 1s ease-in-out infinite alternate;
+}
+
+.main-control-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+@keyframes kitt-idle {
+  0%, 100% { 
+    transform: scaleY(0.3);
+    opacity: 0.6;
+  }
+  50% { 
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+@keyframes kitt-voice-response {
+  0% { 
+    transform: scaleY(0.2);
+    opacity: 0.4;
+  }
+  25% { 
+    transform: scaleY(1.2);
+    opacity: 1;
+  }
+  50% { 
+    transform: scaleY(0.6);
+    opacity: 0.8;
+  }
+  75% { 
+    transform: scaleY(1.4);
+    opacity: 1;
+  }
+  100% { 
+    transform: scaleY(0.3);
+    opacity: 0.5;
+  }
+}
+
+@keyframes voice-pulse {
+  0% { transform: scaleY(0.5); opacity: 0.6; }
+  100% { transform: scaleY(1.2); opacity: 1; }
+}
+
+@keyframes control-pulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+@keyframes button-active-pulse {
+  0% { 
+    box-shadow: 
+      0 0 20px rgba(255, 0, 0, 0.5),
+      inset 0 0 20px rgba(255, 0, 0, 0.2); 
+  }
+  100% { 
+    box-shadow: 
+      0 0 40px rgba(255, 0, 0, 0.8),
+      inset 0 0 40px rgba(255, 0, 0, 0.4); 
+  }
+}
