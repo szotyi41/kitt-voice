@@ -1,16 +1,37 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import KittVoiceInterface from './components/KittVoiceInterface';
-import PasswordProtection from './components/PasswordProtection';
+import AuthScreen from './components/AuthScreen';
 import { voiceService } from './services/openai';
 import './App.css';
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [audioLevel, setAudioLevel] = useState(0);
   const [kittAudioLevel, setKittAudioLevel] = useState(0);
   const [currentStream, setCurrentStream] = useState<MediaStream | null>(null);
+
+  useEffect(() => {
+    // Check if user was previously authenticated
+    const authStatus = localStorage.getItem('kitt-auth');
+    const authTime = localStorage.getItem('kitt-auth-time');
+    
+    if (authStatus === 'authenticated' && authTime) {
+      // Check if auth is not older than 24 hours
+      const authAge = Date.now() - parseInt(authTime);
+      const maxAge = 24 * 60 * 60 * 1000; // 24 hours
+      
+      if (authAge < maxAge) {
+        setIsAuthenticated(true);
+      } else {
+        // Clear expired auth
+        localStorage.removeItem('kitt-auth');
+        localStorage.removeItem('kitt-auth-time');
+      }
+    }
+  }, []);
 
   const updateAudioLevel = useCallback(async () => {
     if (currentStream && isListening) {
@@ -68,19 +89,21 @@ function App() {
     }
   };
 
+  if (!isAuthenticated) {
+    return <AuthScreen onAuthenticated={() => setIsAuthenticated(true)} />;
+  }
+
   return (
     <div className="App">
-      <PasswordProtection>
-        <KittVoiceInterface
-          onStartListening={handleStartListening}
-          onStopListening={handleStopListening}
-          isListening={isListening}
-          isProcessing={isProcessing}
-          audioLevel={audioLevel}
-          isSpeaking={isSpeaking}
-          kittAudioLevel={kittAudioLevel}
-        />
-      </PasswordProtection>
+      <KittVoiceInterface
+        onStartListening={handleStartListening}
+        onStopListening={handleStopListening}
+        isListening={isListening}
+        isProcessing={isProcessing}
+        audioLevel={audioLevel}
+        isSpeaking={isSpeaking}
+        kittAudioLevel={kittAudioLevel}
+      />
     </div>
   );
 }
