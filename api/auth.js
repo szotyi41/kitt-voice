@@ -1,7 +1,3 @@
-const bcrypt = require('bcrypt');
-
-// Hash the password securely (this should be done once and stored)
-const HASHED_PASSWORD = '$2b$10$YourHashedPasswordHereAfterRunningBcrypt';
 const CORRECT_PASSWORD = 'fV5KTuPVw@aF6wa!Td+k';
 
 export default async function handler(req, res) {

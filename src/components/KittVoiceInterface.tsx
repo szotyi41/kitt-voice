@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './KittVoiceInterface.css';
 
 interface KittVoiceInterfaceProps {
